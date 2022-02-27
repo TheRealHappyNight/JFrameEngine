@@ -70,7 +70,6 @@ public class Snake implements Pressable, Drawable {
             var currEl = this.snake.get(index);
             Vector2 pos = new Vector2(positionInFront);
             currEl.setPosition(pos);
-            currEl.setDirection(this.direction);
         }
     }
 
@@ -131,53 +130,70 @@ public class Snake implements Pressable, Drawable {
     }
 
     public void addElement(Direction direction) {
-        Vector2 lastElementPos = new Vector2(this.snake.get(this.snake.size() - 1).getPosition());
+        Vector2 newPos = new Vector2(this.snake.get(this.snake.size() - 1).getPosition());
+        Image2D newImage = null;
+        Direction newDir = Direction.NO_DIRECTION;
         switch (direction) {
             case UP: {
-                lastElementPos.setY(lastElementPos.getY() + 1);
-                if (snakeEnvironment.isBlocked(lastElementPos)) {
-                    //TODO::
-                } else {
-                    var newEl = new Image2dByGameUnit(lastElementPos, this.bodyVer);
-                    newEl.setDirection(Direction.UP);
-                    this.snake.add(newEl);
+                newPos.setY(newPos.getY() + 1);
+                if (snakeEnvironment.isBlocked(newPos)) {
+                    newPos = findFirstFreePosition(this.snake.get(this.snake.size() - 1).getPosition());
                 }
+                newImage = this.bodyVer;
+                newDir = Direction.UP;
                 break;
             }
             case DOWN: {
-                lastElementPos.setY(lastElementPos.getY() - 1);
-                if (snakeEnvironment.isBlocked(lastElementPos)) {
-                    //TODO::
-                } else {
-                    var newEl = new Image2dByGameUnit(lastElementPos, this.bodyVer);
-                    newEl.setDirection(Direction.DOWN);
-                    this.snake.add(newEl);
+                newPos.setY(newPos.getY() - 1);
+                if (snakeEnvironment.isBlocked(newPos)) {
+                    newPos = findFirstFreePosition(this.snake.get(this.snake.size() - 1).getPosition());
                 }
+                newImage = this.bodyVer;
+                newDir = Direction.DOWN;
                 break;
             }
             case LEFT: {
-                lastElementPos.setX(lastElementPos.getX() + 1);
-                if (snakeEnvironment.isBlocked(lastElementPos)) {
-                    //TODO::
-                } else {
-                    var newEl = new Image2dByGameUnit(lastElementPos, this.bodyHor);
-                    newEl.setDirection(Direction.LEFT);
-                    this.snake.add(newEl);
+                newPos.setX(newPos.getX() + 1);
+                if (snakeEnvironment.isBlocked(newPos)) {
+                    newPos = findFirstFreePosition(this.snake.get(this.snake.size() - 1).getPosition());
                 }
+                newImage = this.bodyHor;
+                newDir = Direction.LEFT;
                 break;
             }
             case RIGHT: {
-                lastElementPos.setX(lastElementPos.getX() - 1);
-                if (snakeEnvironment.isBlocked(lastElementPos)) {
-                    //TODO::
-                } else {
-                    var newEl = new Image2dByGameUnit(lastElementPos, this.bodyHor);
-                    newEl.setDirection(Direction.RIGHT);
-                    this.snake.add(newEl);
+                newPos.setX(newPos.getX() - 1);
+                if (snakeEnvironment.isBlocked(newPos)) {
+                    newPos = findFirstFreePosition(this.snake.get(this.snake.size() - 1).getPosition());
                 }
+                newImage = this.bodyHor;
+                newDir = Direction.RIGHT;
                 break;
             }
         }
+
+        if (null == newPos || null == newImage) {
+            throw new NullPointerException();
+        }
+        Image2dByGameUnit newEl = new Image2dByGameUnit(newPos, newImage);
+        newEl.setDirection(newDir);
+        this.snake.add(newEl);
+    }
+
+    private Vector2 findFirstFreePosition(Vector2 lastElementPos) {
+        if (!snakeEnvironment.isBlocked(lastElementPos.getX() + 1, lastElementPos.getY())) {
+            return new Vector2(lastElementPos.getX() + 1, lastElementPos.getY());
+        }
+        else if (!snakeEnvironment.isBlocked(lastElementPos.getX() - 1, lastElementPos.getY())) {
+            return new Vector2(lastElementPos.getX() - 1, lastElementPos.getY());
+        }
+        else if (!snakeEnvironment.isBlocked(lastElementPos.getX(), lastElementPos.getY() + 1)) {
+            return new Vector2(lastElementPos.getX(), lastElementPos.getY() + 1);
+        }
+        else if (!snakeEnvironment.isBlocked(lastElementPos.getX(), lastElementPos.getY() - 1)) {
+            return new Vector2(lastElementPos.getX(), lastElementPos.getY() - 1);
+        }
+        return null;
     }
 
     @Override
