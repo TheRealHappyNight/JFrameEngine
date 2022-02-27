@@ -294,11 +294,18 @@ public class SnakeEnvironment implements Drawable {
     }
 
     public void consumePickup() {
+        if (null == this.pickupPosition) {
+            return;
+        }
         int x = this.pickupPosition.getX();
         int y = this.pickupPosition.getY();
         this.gameObjects[x][y] = SnakeGameObjects.NOTHING;
         this.background[x][y].setImage(road.getImage());
         this.pickupPosition = new Vector2(-1,-1);
+    }
+
+    public void clearPickup() {
+        consumePickup();
     }
 
     public Snake getSnake() {

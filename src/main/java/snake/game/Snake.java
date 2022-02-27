@@ -23,21 +23,28 @@ public class Snake implements Pressable, Drawable {
 
     private Direction direction;
     private final Timer timer;
+    private boolean gameRunning;
+    private boolean gameOver;
 
     public Snake(SnakeGraphicsData snakeGraphicsData, SnakeEnvironment gameEnvironment) {
         initImages(snakeGraphicsData);
         this.snake = new ArrayList<>();
         this.snakeEnvironment = gameEnvironment;
+        timer = new Timer(GamePropertiesSingleton.getInstance().getGameSpeed() * 2, this::move);
+        initGame();
+    }
 
+    private void initGame() {
         int x = (int) (GamePropertiesSingleton.getInstance().getScreenWidth() /
-                        GamePropertiesSingleton.getInstance().getGameUnit() * 0.25);
+                GamePropertiesSingleton.getInstance().getGameUnit() * 0.25);
         int y = (int) (GamePropertiesSingleton.getInstance().getScreenHeight() /
                 GamePropertiesSingleton.getInstance().getGameUnit() * 0.4);
         Vector2 startingPosition = new Vector2(x,y);
+        this.snake.clear();
+        this.snakeEnvironment.clearPickup();
         this.snake.add(new Image2dByGameUnit(startingPosition, this.headRight.getImage()));
 
         this.direction = Direction.RIGHT;
-        timer = new Timer(GamePropertiesSingleton.getInstance().getGameSpeed() * 2, this::move);
     }
 
     private void initImages(SnakeGraphicsData snakeGraphicsData) {
@@ -50,6 +57,9 @@ public class Snake implements Pressable, Drawable {
     }
 
     private void move(ActionEvent event) {
+        if (gameOver)
+            return;
+
         moveRestOfBody();
         moveHead();
 
@@ -141,12 +151,29 @@ public class Snake implements Pressable, Drawable {
     }
 
     public void gameOver() {
-        System.out.println("GameOver");
+        if (this.gameRunning) {
+            this.gameRunning = false;
+            this.gameOver = true;
+        }
     }
 
     public void draw(Graphics2D g) {
         for(Image2dByGameUnit img : snake) {
             img.draw(g);
+        }
+
+        if (gameOver) {
+            g.setColor(Color.red);
+            g.setFont( new Font("Ink Free",Font.BOLD, 75));
+            g.drawString("Game Over", GamePropertiesSingleton.getInstance().getScreenHeight() / 2,
+                    GamePropertiesSingleton.getInstance().getScreenHeight() / 2);
+        }
+
+        if (!gameRunning) {
+            g.setColor(Color.red);
+            g.setFont( new Font("Ink Free",Font.BOLD, 75));
+            g.drawString("Press Enter to Start", GamePropertiesSingleton.getInstance().getScreenHeight() / 3,
+                    GamePropertiesSingleton.getInstance().getScreenHeight() / 3);
         }
     }
 
@@ -232,6 +259,12 @@ public class Snake implements Pressable, Drawable {
     }
 
     public void startGame() {
+        if (this.gameRunning) {
+            return;
+        }
+        this.gameRunning = true;
+        this.gameOver = false;
+        this.initGame();
         this.timer.start();
         this.snakeEnvironment.spawnPickup();
     }
