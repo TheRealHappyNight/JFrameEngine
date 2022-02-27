@@ -5,36 +5,43 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Image2D {
-    private Vector2 position;
+    private Vector2 pixelStartPosition;
     private AffineTransform transform;
     private BufferedImage image;
 
     public Image2D(Vector2 position, BufferedImage image) {
-        this.position = new Vector2(position);
+        this.pixelStartPosition = new Vector2(position);
         this.transform = new AffineTransform();
         this.transform.translate(position.getX(), position.getY());
         this.image = image;
     }
 
-    public AffineTransform getTransform() {
-        return transform;
+    public Image2D(Image2D image) {
+        this.pixelStartPosition = new Vector2(image.getPixelStartPosition());
+        this.transform = new AffineTransform();
+        this.transform.translate(this.pixelStartPosition.getX(), this.pixelStartPosition.getY());
+        this.image = image.getImage();
+    }
+
+    public void draw(Graphics2D g) {
+        g.drawImage(image, transform, null);
     }
 
     public BufferedImage getImage() {
         return image;
     }
 
-    public Vector2 getPosition() {
-        return position;
+    public Vector2 getPixelStartPosition() {
+        return pixelStartPosition;
     }
 
-    public void setPosition(Vector2 position) {
-        this.position.add(position);
+    public void setPixelStartPosition(Vector2 pixelStartPosition) {
+        this.pixelStartPosition.set(pixelStartPosition);
         this.transform.setToIdentity();
-        this.transform.translate(this.position.getX(),this.position.getY());
+        this.transform.translate(this.pixelStartPosition.getX(),this.pixelStartPosition.getY());
     }
 
-    public void rotateBy90(int count) {
+    public final void rotateBy90(int count) {
         if (count % 4 == 0)
             return;
 
@@ -44,7 +51,7 @@ public class Image2D {
         transform.rotate(rads, anchorX, anchorY);
     }
 
-    public void paint(Graphics2D g2D) {
-        g2D.drawImage(image, transform, null);
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 }

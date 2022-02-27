@@ -26,38 +26,33 @@ public class KeyboardAdapter extends KeyAdapter {
         KeyEvent2D keyEvent2D = null;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP: {
-                if (this.direction == Direction.DOWN) {
-                    return;
-                }
-
                 this.direction = Direction.UP;
                 keyEvent2D = new KeyEvent2D(MOVE_KEY, this.direction);
-                controllable.processKeyEvent(keyEvent2D);
                 break;
             }
             case KeyEvent.VK_DOWN: {
                 this.direction = Direction.DOWN;
                 keyEvent2D = new KeyEvent2D(MOVE_KEY, this.direction);
-                controllable.processKeyEvent(keyEvent2D);
                 break;
             }
             case KeyEvent.VK_LEFT: {
                 this.direction = Direction.LEFT;
                 keyEvent2D = new KeyEvent2D(MOVE_KEY, this.direction);
-                controllable.processKeyEvent(keyEvent2D);
                 break;
             }
             case KeyEvent.VK_RIGHT: {
                 this.direction = Direction.RIGHT;
                 keyEvent2D = new KeyEvent2D(MOVE_KEY, this.direction);
-                controllable.processKeyEvent(keyEvent2D);
                 break;
             }
             case KeyEvent.VK_ENTER: {
                 keyEvent2D = new KeyEvent2D(PLAY_KEY);
-                controllable.processKeyEvent(keyEvent2D);
                 break;
             }
+        }
+
+        if (null != keyEvent2D) {
+            controllable.processKeyEvent(keyEvent2D);
         }
     }
 

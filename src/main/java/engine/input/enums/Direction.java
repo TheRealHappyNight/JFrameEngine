@@ -1,23 +1,25 @@
 package engine.input.enums;
 
-public enum Direction {
-    NO_DIRECTION(-1),
-    UP(0),
-    DOWN(1),
-    LEFT(2),
-    RIGHT(3);
+import engine.basictypes.Vector2;
 
-    private final int direction;
+public enum Direction {
+    NO_DIRECTION(),
+    UP(new Vector2(0,-1)),
+    DOWN(new Vector2(0,1)),
+    LEFT(new Vector2(-1,0)),
+    RIGHT(new Vector2(1,0));
+
+    private final Vector2 direction;
 
     Direction() {
-        direction = -1;
+        direction = new Vector2(0,0);
     }
 
-    Direction(int direction) {
+    Direction(Vector2 direction) {
         this.direction = direction;
     }
 
-    public int getDirection() {
+    public Vector2 getDirection() {
         return direction;
     }
 }

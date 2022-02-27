@@ -45,7 +45,7 @@ public class ResourceLoader {
         this.sprites.put(keyNames, image);
     }
 
-    public Image2D getImage(String name) {
-        return this.sprites.get(name);
+    public Image2D getImage(String key) {
+        return this.sprites.get(key);
     }
 }

@@ -18,6 +18,11 @@ public class Vector2 implements Cloneable, Comparable<Vector2> {
         this.y = pos.y;
     }
 
+    public void set(Vector2 pos) {
+        this.x = pos.getX();
+        this.y = pos.getY();
+    }
+
     public int getX() {
         return x;
     }
