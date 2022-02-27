@@ -18,11 +18,11 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class Snake implements Pressable, Drawable {
-    private ArrayList<Image2dByGameUnit> snake;
-    private SnakeEnvironment snakeEnvironment;
+    private final ArrayList<Image2dByGameUnit> snake;
+    private final SnakeEnvironment snakeEnvironment;
 
     private Direction direction;
-    private Timer timer;
+    private final Timer timer;
 
     public Snake(SnakeGraphicsData snakeGraphicsData, SnakeEnvironment gameEnvironment) {
         initImages(snakeGraphicsData);
@@ -60,8 +60,29 @@ public class Snake implements Pressable, Drawable {
         var head = this.snake.get(0);
         Vector2 pos = new Vector2(head.getPosition());
         pos.add(this.direction.getDirection());
+        moveHeadOnTheOtherSideOfTheMapWhenOutOfBounds(pos);
         head.setPosition(pos);
         head.setDirection(this.direction);
+    }
+
+    private void moveHeadOnTheOtherSideOfTheMapWhenOutOfBounds(Vector2 pos) {
+        int screenHeightInGameUnits = GamePropertiesSingleton.getInstance().getScreenHeight()  /
+                GamePropertiesSingleton.getInstance().getGameUnit();
+        int screenWidthInGameUnits = GamePropertiesSingleton.getInstance().getScreenWidth()  /
+                GamePropertiesSingleton.getInstance().getGameUnit();
+
+        if (pos.getY() < 0) {
+            pos.setY(screenHeightInGameUnits - 1);
+        }
+        else if (pos.getY() >= screenHeightInGameUnits) {
+            pos.setY(0);
+        }
+        else if (pos.getX() < 0) {
+            pos.setX(screenWidthInGameUnits - 1);
+        }
+        else if (pos.getX() >= screenWidthInGameUnits) {
+            pos.setX(0);
+        }
     }
 
     private void moveRestOfBody() {
