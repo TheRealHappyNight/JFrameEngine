@@ -64,6 +64,7 @@ public class Snake implements Pressable, Drawable {
         moveHead();
 
         update();
+        snakeEnvironment.updateSnakePosition();
     }
 
     private void moveHead() {
@@ -106,7 +107,8 @@ public class Snake implements Pressable, Drawable {
 
     public void update() {
         Vector2 currPosition = this.snake.get(0).getPosition();
-        if (this.snakeEnvironment.gameObjectIs(currPosition, SnakeGameObjects.WALL)) {
+        if (this.snakeEnvironment.gameObjectIs(currPosition, SnakeGameObjects.WALL) ||
+                this.snakeEnvironment.gameObjectIs(currPosition, SnakeGameObjects.SNAKE)) {
             gameOver();
         }
 
@@ -310,6 +312,10 @@ public class Snake implements Pressable, Drawable {
             }
         }
         return false;
+    }
+
+    public ArrayList<Image2dByGameUnit> getSnake() {
+        return snake;
     }
 
     private Image2D headUp;

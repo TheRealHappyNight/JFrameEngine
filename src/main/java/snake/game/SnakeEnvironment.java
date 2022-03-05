@@ -242,6 +242,19 @@ public class SnakeEnvironment implements Drawable {
         }
         drawGrid(g);
         snake.draw(g);
+        updateSnakePosition();
+    }
+
+    private Vector2 deleteLasPos;
+    public void updateSnakePosition() {
+//        var snake = this.snake.getSnake();
+//        if (null != deleteLasPos) {
+//            this.gameObjects[deleteLasPos.getX()][deleteLasPos.getY()] = SnakeGameObjects.NOTHING;
+//        }
+//        this.deleteLasPos = new Vector2(snake.get(snake.size() - 1).getPosition());
+//        for(var el : snake) {
+//            this.gameObjects[el.getPosition().getX()][el.getPosition().getY()] = SnakeGameObjects.SNAKE;
+//        }
     }
 
     private void drawGrid(Graphics2D g2D) {
